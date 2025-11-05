@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account Intelligence Overview</title>
+  <script
+    id="sap-ui-bootstrap"
+    src="https://sdk.openui5.org/resources/sap-ui-core.js"
+    data-sap-ui-theme="sap_horizon"
+    data-sap-ui-libs="sap.m"
+    data-sap-ui-async="true"
+    data-sap-ui-compatVersion="edge"
+  ></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .cardGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
+    .sapMPanel {
+      height: 100%;
+    }
+  </style>
+</head>
+<body class="sapUiBody" id="content">
+  <canvas id="demandChart" style="max-width: 100%; margin: 1rem 0;"></canvas>
+  <div id="cardContainer" class="cardGrid"></div>
+  <script>
+    sap.ui.getCore().attachInit(function () {
+      const createCard = (title, content) => new sap.m.Panel({
+        headerText: title,
+        expandable: false,
+        content: [content],
+        class: "sapUiResponsiveMargin"
+      });
+
+      const outageContent = new sap.m.ObjectStatus({
+        text: "Planned maintenance - 10/10/2025 8am–2pm",
+        state: "Warning",
+        icon: "sap-icon://alert"
+      });
+
+      const riskLevel = new sap.m.ObjectStatus({
+        text: "Medium Risk",
+        state: "Warning",
+        icon: "sap-icon://shield"
+      });
+
+      const collectionsContent = new sap.m.VBox({
+        items: [
+          new sap.m.ObjectNumber({ number: 238.50, unit: "USD", state: "Error" }),
+          new sap.m.Label({ text: "Controllable: Missed payments" }),
+          new sap.m.Text({ text: "Customer impacted by income disruption. Contact center note added 09/21." })
+        ]
+      });
+
+      const demandContent = new sap.m.VBox({
+        items: [
+          new sap.m.Label({ text: "Usage increased 12% YoY" }),
+          new sap.m.ObjectStatus({ text: "Projected increase: +8% in 2026", state: "Success", icon: "sap-icon://trend-up" })
+        ]
+      });
+
+      const contractContent = new sap.m.VBox({
+        items: [
+          new sap.m.ObjectStatus({
+            text: "Exp. 03/15/2026 — Fixed Rate $0.14/kWh",
+            state: "None",
+            icon: "sap-icon://calendar"
+          }),
+          new sap.m.Label({ text: "Start Date: 03/15/2024" }),
+          new sap.m.Label({ text: "Rate Plan ID: FXR14" }),
+          new sap.m.Text({ text: "Rate Description: Fixed Residential 12-month" }),
+          new sap.m.Label({ text: "Total Revenue To Date: $2,413.76" })
+        ]
+      });
+
+      const sentimentContent = new sap.m.VBox({
+        items: [
+          new sap.m.ObjectStatus({
+            text: "Neutral sentiment (last 90 days)",
+            state: "None",
+            icon: "sap-icon://employee-rejections"
+          }),
+          new sap.m.Label({ text: "Last Touchpoint: Support Call (Email)" }),
+          new sap.m.Label({ text: "Sentiment Trend: Improving" }),
+          new sap.m.Text({ text: "Lowest Score (12 mo): Very Unhappy | Highest: Very Happy" })
+        ]
+      });
+
+      const cards = [
+        createCard("1. Recent / Planned Outages", outageContent),
+        createCard("2. Customer Risk Level", riskLevel),
+        createCard("3. Collections Status", collectionsContent),
+        createCard("4. Customer Demand YoY + Projection", demandContent),
+        createCard("5. Contract Terms", contractContent),
+        createCard("6. Account Sentiment", sentimentContent)
+      ];
+
+      cards.forEach(card => card.placeAt("cardContainer"));
+
+      // Chart.js Demand Chart
+      const ctx = document.getElementById("demandChart").getContext("2d");
+      new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: ["2020", "2021", "2022", "2023", "2024", "2025", "2026*"],
+          datasets: [{
+            label: "Annual Usage (kWh)",
+            data: [4200, 4400, 4650, 4800, 5100, 5700, 6150],
+            borderColor: "#0a6ed1",
+            backgroundColor: "rgba(10,110,209,0.1)",
+            fill: true,
+            tension: 0.3,
+            pointBackgroundColor: "#0a6ed1"
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: "Customer Demand (kWh) — YoY with 2026 Projection"
+            },
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              title: {
+                display: true,
+                text: "Usage (kWh)"
+              }
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
