@@ -44,7 +44,7 @@
       });
 
       const outageContent = new sap.m.ObjectStatus({
-        text: "Planned maintenance - 10/10/2025 8am–2pm",
+        text: "Planned maintenance - 12/10/2025 8am–2pm",
         state: "Warning",
         icon: "sap-icon://alert"
       });
@@ -57,7 +57,7 @@
 
       const collectionsContent = new sap.m.VBox({
         items: [
-          new sap.m.ObjectNumber({ number: 238.50, unit: "USD", state: "Error" }),
+          new sap.m.ObjectNumber({ number: $93.8K, unit: "USD", state: "Error" }),
           new sap.m.Label({ text: "Controllable: Missed payments" }),
           new sap.m.Text({ text: "Customer impacted by income disruption. Contact center note added 09/21." })
         ]
@@ -78,20 +78,20 @@
             icon: "sap-icon://calendar"
           }),
           new sap.m.Label({ text: "Start Date: 03/15/2024" }),
-          new sap.m.Label({ text: "Rate Plan ID: FXR14" }),
-          new sap.m.Text({ text: "Rate Description: Fixed Residential 12-month" }),
-          new sap.m.Label({ text: "Total Revenue To Date: $2,413.76" })
+          new sap.m.Label({ text: "Rate Plan ID: CE-GS-PFIX" }),
+          new sap.m.Text({ text: "Rate Description: Percent Fixed and Index" }),
+          new sap.m.Label({ text: "Total Revenue To Date: $1,841,382.85" })
         ]
       });
 
       const sentimentContent = new sap.m.VBox({
         items: [
           new sap.m.ObjectStatus({
-            text: "Neutral sentiment (last 90 days)",
-            state: "None",
+            text: "Positive sentiment (last 90 days)",
+            state: "Success",
             icon: "sap-icon://employee-rejections"
           }),
-          new sap.m.Label({ text: "Last Touchpoint: Support Call (Email)" }),
+          new sap.m.Label({ text: "Last Touchpoint: Community Expansion Discussion (Email)" }),
           new sap.m.Label({ text: "Sentiment Trend: Improving" }),
           new sap.m.Text({ text: "Lowest Score (12 mo): Very Unhappy | Highest: Very Happy" })
         ]
@@ -150,6 +150,7 @@
   </script>
 </body>
 </html>
+
 
 
 
