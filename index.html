@@ -25,8 +25,8 @@
     }
     #demandChart {
       width: 100%;
-      height: 300px !important;
-      max-height: 300px;
+      height: 200px !important;
+      max-height: 200px;
       margin: 1rem 0;
     }
   </style>
@@ -57,9 +57,9 @@
 
       const collectionsContent = new sap.m.VBox({
         items: [
-          new sap.m.ObjectNumber({ number: 93,800, unit: "USD", state: "Error" }),
+          new sap.m.ObjectNumber({ number: 238.50, unit: "USD", state: "Error" }),
           new sap.m.Label({ text: "Controllable: Missed payments" }),
-          new sap.m.Text({ text: "Customer impacted by income disruption. Key Account Manager note added 09/21." })
+          new sap.m.Text({ text: "Customer impacted by income disruption. Contact center note added 09/21." })
         ]
       });
 
@@ -74,21 +74,21 @@
         items: [
           new sap.m.ObjectStatus({
             text: "Exp. 03/15/2026 — Peak Demand Rate $9.14/KW",
-            state: "Success",
+            state: "None",
             icon: "sap-icon://calendar"
           }),
           new sap.m.Label({ text: "Start Date: 03/15/2024" }),
           new sap.m.Label({ text: "Rate Plan ID: CE-GS-PFIX" }),
           new sap.m.Text({ text: "Rate Description: Percent Fixed and Index" }),
-          new sap.m.Label({ text: "Total Revenue To Date: $1,841,382.85" })
+          new sap.m.Label({ text: "Total Revenue To Date: $2,413.76" })
         ]
       });
 
       const sentimentContent = new sap.m.VBox({
         items: [
           new sap.m.ObjectStatus({
-            text: "Positive sentiment (last 90 days)",
-            state: "Success",
+            text: "Neutral sentiment (last 90 days)",
+            state: "None",
             icon: "sap-icon://employee-rejections"
           }),
           new sap.m.Label({ text: "Last Touchpoint: Community Expansion Discussion (Email)" }),
@@ -114,7 +114,7 @@
         data: {
           labels: ["2020", "2021", "2022", "2023", "2024", "2025", "2026*"],
           datasets: [{
-            label: "Peak Demand (KW)",
+            label: "Annual Usage (kWh)",
             data: [09.37, 13.8, 17.73, 19.78, 18.47, 26.91, 37.14],
             borderColor: "#0a6ed1",
             backgroundColor: "rgba(10,110,209,0.1)",
@@ -150,6 +150,8 @@
   </script>
 </body>
 </html>
+
+
 
 
 
