@@ -16,7 +16,7 @@
   <style>
     .cardGrid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: 1rem;
       padding: 1rem;
     }
@@ -97,24 +97,25 @@
         ]
       });
 
-      const rateProgramsContent = new sap.m.VBox({
+      const solarPrograms = new sap.m.VBox({
         items: [
-          new sap.m.ObjectStatus({ text: "Enrolled in TOU Rate Plan", state: "Success" }),
-          new sap.m.Text({ text: "Eligible for Renewable Rate: Not Enrolled" })
+          new sap.m.ObjectStatus({ text: "Rooftop Solar - Enrolled", state: "Success", icon: "sap-icon://energy-saving-lightbulb" }),
+          new sap.m.ObjectStatus({ text: "Community Solar - Not Enrolled", state: "None", icon: "sap-icon://cancel" })
         ]
       });
 
-      const generationProgramsContent = new sap.m.VBox({
+      const evPrograms = new sap.m.VBox({
         items: [
-          new sap.m.ObjectStatus({ text: "Rooftop Solar Installed", state: "Success" }),
-          new sap.m.Text({ text: "Export Tariff: NEM 2.0" })
+          new sap.m.ObjectStatus({ text: "Hosted EV Charging - Enrolled", state: "Success", icon: "sap-icon://journey-arrival" }),
+          new sap.m.ObjectStatus({ text: "Residential EV Rate - Not Enrolled", state: "None", icon: "sap-icon://cancel" })
         ]
       });
 
-      const efficiencyProgramsContent = new sap.m.VBox({
+      const efficiencyPrograms = new sap.m.VBox({
         items: [
-          new sap.m.ObjectStatus({ text: "LED Upgrade Completed 2023", state: "Success" }),
-          new sap.m.Text({ text: "HVAC Rebate Program: Not Enrolled" })
+          new sap.m.ObjectStatus({ text: "Battery Storage - Enrolled", state: "Success", icon: "sap-icon://add-equipment" }),
+          new sap.m.ObjectStatus({ text: "TOU Rates - Enrolled", state: "Success", icon: "sap-icon://time-entry-request" }),
+          new sap.m.ObjectStatus({ text: "Building Efficiency - Not Enrolled", state: "None", icon: "sap-icon://cancel" })
         ]
       });
 
@@ -125,9 +126,9 @@
         createCard("4. Customer Demand YoY + Projection", demandContent),
         createCard("5. Contract Terms", contractContent),
         createCard("6. Account Sentiment", sentimentContent),
-        createCard("7. Rate Programs", rateProgramsContent),
-        createCard("8. Generation Programs", generationProgramsContent),
-        createCard("9. Energy Efficiency Programs", efficiencyProgramsContent)
+        createCard("7. Rate / Generation Programs", solarPrograms),
+        createCard("8. Electric Vehicle Programs", evPrograms),
+        createCard("9. Energy Storage / Efficiency", efficiencyPrograms)
       ];
 
       cards.forEach(card => card.placeAt("cardContainer"));
@@ -174,6 +175,7 @@
   </script>
 </body>
 </html>
+
 
 <!--<!DOCTYPE html>
 <html lang="en">
