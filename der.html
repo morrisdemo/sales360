@@ -99,14 +99,14 @@
 
       const solarPrograms = new sap.m.VBox({
         items: [
-          new sap.m.ObjectStatus({ text: "Rooftop Solar - Enrolled", state: "Success", icon: "sap-icon://energy-saving-lightbulb" }),
-          new sap.m.ObjectStatus({ text: "Community Solar - Not Enrolled", state: "None", icon: "sap-icon://cancel" })
+          new sap.m.ObjectStatus({ text: "Property / Rooftop Solar - Enrolled", state: "Success", icon: "sap-icon://energy-saving-lightbulb" }),
+          new sap.m.ObjectStatus({ text: "Distributed / Community Solar - Not Enrolled", state: "None", icon: "sap-icon://cancel" })
         ]
       });
 
       const evPrograms = new sap.m.VBox({
         items: [
-          new sap.m.ObjectStatus({ text: "Hosted EV Charging - Enrolled", state: "Success", icon: "sap-icon://journey-arrival" }),
+          new sap.m.ObjectStatus({ text: "Utility Owned Hosted EV Charging Stations - Enrolled", state: "Success", icon: "sap-icon://journey-arrival" }),
           new sap.m.ObjectStatus({ text: "Residential EV Rate - Not Enrolled", state: "None", icon: "sap-icon://cancel" })
         ]
       });
@@ -114,7 +114,7 @@
       const efficiencyPrograms = new sap.m.VBox({
         items: [
           new sap.m.ObjectStatus({ text: "Battery Storage - Enrolled", state: "Success", icon: "sap-icon://add-equipment" }),
-          new sap.m.ObjectStatus({ text: "TOU Rates - Enrolled", state: "Success", icon: "sap-icon://time-entry-request" }),
+          new sap.m.ObjectStatus({ text: "Time Of Use Rate - Enrolled", state: "Success", icon: "sap-icon://time-entry-request" }),
           new sap.m.ObjectStatus({ text: "Building Efficiency - Not Enrolled", state: "None", icon: "sap-icon://cancel" })
         ]
       });
