@@ -55,47 +55,111 @@
         }
       ];
 
+      const oModel = new sap.ui.model.json.JSONModel({ orders: serviceOrders });
+
       const table = new sap.m.Table({
         headerText: "Service Order History",
         growing: true,
         growingScrollToLoad: true,
+        mode: "None",
         columns: [
-          new sap.m.Column({ header: new sap.m.Label({ text: "Order #" }) }),
-          new sap.m.Column({ header: new sap.m.Label({ text: "Order Type" }) }),
-          new sap.m.Column({ header: new sap.m.Label({ text: "Activity Type" }) }),
-          new sap.m.Column({ header: new sap.m.Label({ text: "Start Date" }) }),
-          new sap.m.Column({ header: new sap.m.Label({ text: "Start Time" }) }),
-          new sap.m.Column({ header: new sap.m.Label({ text: "End Date" }) }),
-          new sap.m.Column({ header: new sap.m.Label({ text: "End Time" }) }),
-          new sap.m.Column({ header: new sap.m.Label({ text: "System Status" }) }),
-          new sap.m.Column({ header: new sap.m.Label({ text: "User Status" }) }),
-          new sap.m.Column({ header: new sap.m.Label({ text: "Notes" }) })
-        ]
+          new sap.m.Column({
+            header: new sap.m.Label({ text: "Order #" }),
+            sortProperty: "orderNumber",
+            filterProperty: "orderNumber"
+          }),
+          new sap.m.Column({
+            header: new sap.m.Label({ text: "Order Type" }),
+            sortProperty: "orderType"
+          }),
+          new sap.m.Column({
+            header: new sap.m.Label({ text: "Activity Type" }),
+            sortProperty: "activityType"
+          }),
+          new sap.m.Column({
+            header: new sap.m.Label({ text: "Start Date" }),
+            sortProperty: "startDate"
+          }),
+          new sap.m.Column({
+            header: new sap.m.Label({ text: "Start Time" })
+          }),
+          new sap.m.Column({
+            header: new sap.m.Label({ text: "End Date" }),
+            sortProperty: "endDate"
+          }),
+          new sap.m.Column({
+            header: new sap.m.Label({ text: "End Time" })
+          }),
+          new sap.m.Column({
+            header: new sap.m.Label({ text: "System Status" }),
+            sortProperty: "sysStatus"
+          }),
+          new sap.m.Column({
+            header: new sap.m.Label({ text: "User Status" })
+          }),
+          new sap.m.Column({
+            header: new sap.m.Label({ text: "Notes" })
+          })
+        ],
+        items: {
+          path: "/orders",
+          template: new sap.m.ColumnListItem({
+            cells: [
+              new sap.m.Text({ text: "{orderNumber}" }),
+              new sap.m.Text({ text: "{orderType}" }),
+              new sap.m.Text({ text: "{activityType}" }),
+              new sap.m.Text({ text: "{startDate}" }),
+              new sap.m.Text({ text: "{startTime}" }),
+              new sap.m.Text({ text: "{endDate}" }),
+              new sap.m.Text({ text: "{endTime}" }),
+              new sap.m.ObjectStatus({
+                text: "{sysStatus}",
+                state: {
+                  path: "sysStatus",
+                  formatter: function (status) {
+                    return status === "REL" ? "Success" : "Warning";
+                  }
+                }
+              }),
+              new sap.m.Text({ text: "{userStatus}" }),
+              new sap.m.Text({ text: "{notes}" })
+            ]
+          })
+        }
       });
 
-      serviceOrders.forEach(order => {
-        table.addItem(new sap.m.ColumnListItem({
-          cells: [
-            new sap.m.Text({ text: order.orderNumber }),
-            new sap.m.Text({ text: order.orderType }),
-            new sap.m.Text({ text: order.activityType }),
-            new sap.m.Text({ text: order.startDate }),
-            new sap.m.Text({ text: order.startTime }),
-            new sap.m.Text({ text: order.endDate }),
-            new sap.m.Text({ text: order.endTime }),
-            new sap.m.ObjectStatus({
-              text: order.sysStatus,
-              state: order.sysStatus === "REL" ? "Success" : "Warning"
-            }),
-            new sap.m.Text({ text: order.userStatus }),
-            new sap.m.Text({ text: order.notes })
-          ]
-        }));
+      table.setModel(oModel);
+
+      const searchField = new sap.m.SearchField({
+        width: "100%",
+        placeholder: "Search Orders...",
+        liveChange: function (oEvent) {
+          const query = oEvent.getParameter("newValue").toLowerCase();
+          const filters = [];
+
+          if (query) {
+            filters.push(
+              new sap.ui.model.Filter({
+                filters: [
+                  new sap.ui.model.Filter("orderNumber", sap.ui.model.FilterOperator.Contains, query),
+                  new sap.ui.model.Filter("notes", sap.ui.model.FilterOperator.Contains, query),
+                  new sap.ui.model.Filter("sysStatus", sap.ui.model.FilterOperator.Contains, query)
+                ],
+                and: false
+              })
+            );
+          }
+
+          table.getBinding("items").filter(filters);
+        }
       });
 
       const page = new sap.m.Page({
-        title: "Service Order History Table",
-        content: [table]
+        title: "Service Order History",
+        content: [
+          searchField,
+          table
+        ]
       });
 
       const app = new sap.m.App();
@@ -105,3 +169,4 @@
   </script>
 </body>
 </html>
+
