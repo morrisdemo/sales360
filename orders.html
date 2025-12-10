@@ -98,9 +98,9 @@
         content: [table]
       });
 
-      new sap.m.App({ initialPage: "serviceOrderPage" })
-        .addPage(page.setId("serviceOrderPage"))
-        .placeAt("content");
+      const app = new sap.m.App();
+      app.addPage(page);
+      app.placeAt("content");
     });
   </script>
 </body>
