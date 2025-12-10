@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Service Order History</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script
+    id="sap-ui-bootstrap"
+    src="https://sdk.openui5.org/resources/sap-ui-core.js"
+    data-sap-ui-theme="sap_horizon"
+    data-sap-ui-libs="sap.m"
+    data-sap-ui-async="true"
+    data-sap-ui-compatVersion="edge"
+  ></script>
+</head>
+<body class="sapUiBody" id="content">
+  <script>
+    sap.ui.getCore().attachInit(function () {
+      const serviceOrders = [
+        {
+          orderNumber: "904161",
+          orderType: "USRV",
+          activityType: "MANC",
+          startDate: "2025-11-12",
+          startTime: "08:00",
+          endDate: "2025-11-12",
+          endTime: "12:00",
+          sysStatus: "PEND",
+          userStatus: "CRTD NMAT PRC",
+          notes: "Outage Reported"
+        },
+        {
+          orderNumber: "904160",
+          orderType: "USRV",
+          activityType: "MANC",
+          startDate: "2025-09-12",
+          startTime: "10:30",
+          endDate: "2025-09-12",
+          endTime: "13:00",
+          sysStatus: "PEND",
+          userStatus: "CRTD NMAT PRC",
+          notes: "Meter Glass Broken"
+        },
+        {
+          orderNumber: "904159",
+          orderType: "USRV",
+          activityType: "NMAT",
+          startDate: "2025-03-24",
+          startTime: "09:00",
+          endDate: "2025-03-24",
+          endTime: "11:45",
+          sysStatus: "REL",
+          userStatus: "REL NMAT PRC",
+          notes: "Meter Inspection Order"
+        }
+      ];
+
+      const table = new sap.m.Table({
+        headerText: "Service Order History",
+        growing: true,
+        growingScrollToLoad: true,
+        columns: [
+          new sap.m.Column({ header: new sap.m.Label({ text: "Order #" }) }),
+          new sap.m.Column({ header: new sap.m.Label({ text: "Order Type" }) }),
+          new sap.m.Column({ header: new sap.m.Label({ text: "Activity Type" }) }),
+          new sap.m.Column({ header: new sap.m.Label({ text: "Start Date" }) }),
+          new sap.m.Column({ header: new sap.m.Label({ text: "Start Time" }) }),
+          new sap.m.Column({ header: new sap.m.Label({ text: "End Date" }) }),
+          new sap.m.Column({ header: new sap.m.Label({ text: "End Time" }) }),
+          new sap.m.Column({ header: new sap.m.Label({ text: "System Status" }) }),
+          new sap.m.Column({ header: new sap.m.Label({ text: "User Status" }) }),
+          new sap.m.Column({ header: new sap.m.Label({ text: "Notes" }) })
+        ]
+      });
+
+      serviceOrders.forEach(order => {
+        table.addItem(new sap.m.ColumnListItem({
+          cells: [
+            new sap.m.Text({ text: order.orderNumber }),
+            new sap.m.Text({ text: order.orderType }),
+            new sap.m.Text({ text: order.activityType }),
+            new sap.m.Text({ text: order.startDate }),
+            new sap.m.Text({ text: order.startTime }),
+            new sap.m.Text({ text: order.endDate }),
+            new sap.m.Text({ text: order.endTime }),
+            new sap.m.ObjectStatus({
+              text: order.sysStatus,
+              state: order.sysStatus === "REL" ? "Success" : "Warning"
+            }),
+            new sap.m.Text({ text: order.userStatus }),
+            new sap.m.Text({ text: order.notes })
+          ]
+        }));
+      });
+
+      const page = new sap.m.Page({
+        title: "Service Order History Table",
+        content: [table]
+      });
+
+      new sap.m.App({ initialPage: "serviceOrderPage" })
+        .addPage(page.setId("serviceOrderPage"))
+        .placeAt("content");
+    });
+  </script>
+</body>
+</html>
