@@ -19,7 +19,7 @@
         {
           orderNumber: "904161",
           orderType: "USRV",
-          activityType: "INS",
+          activityType: "INV",
           description: "Install EV Charging Stations",
           startDate: "12/12/2025",
           startTime: "08:00",
@@ -41,20 +41,20 @@
           sysStatus: "CRTD MANC NMAT PRC",
           userStatus: "COMP",
           notes: "Detail gathering for EV Charger install"
-        }
-       /* {
+        },
+        {
           orderNumber: "904159",
           orderType: "USRV",
-          activityType: "REL NMAT PRC",
+          activityType: "INS",
           description: "Meter Inspection Order",
           startDate: "03/24/2025",
           startTime: "09:00",
           endDate: "03/24/2025",
           endTime: "11:45",
-          sysStatus: "REL",
-          userStatus: "3",
+          sysStatus: "CRTD MANC NMAT PRC",
+          userStatus: "COMP",
           notes: "Routine meter inspection completed."
-        }*/
+        }
       ];
 
       const oModel = new sap.ui.model.json.JSONModel({ orders: serviceOrders });
