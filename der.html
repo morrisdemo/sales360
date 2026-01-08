@@ -412,11 +412,11 @@
           })
         ]
       });
-
-      /**
-       * 3) Billing & AR Snapshot (replaces Collections Status)
+/**
+* 3) Billing & AR Snapshot (replaces Collections Status)
        */
-      items: [
+      const arContent = new sap.m.VBox({
+        items: [
           new sap.m.ObjectNumber({
             number: model.ar.totalPastDue.toFixed(2),
             unit: "USD Past Due",
@@ -425,14 +425,12 @@
           new sap.m.Text({ text: `DSO: ${model.ar.dso} days`, class: "muted" }),
 
           new sap.m.Title({ text: "Aging Buckets", level: "H6" }),
-          new sap.m.FormattedText({ htmlText: agingHtml }),
           new sap.m.HBox({
             justifyContent: "SpaceBetween",
             items: [
               new sap.m.ObjectNumber({ number: model.ar.aging["0_30"].toFixed(2), unit: "0–30", state: "Warning" }),
               new sap.m.ObjectNumber({ number: model.ar.aging["31_60"].toFixed(2), unit: "31–60", state: "Error" }),
               new sap.m.ObjectNumber({ number: model.ar.aging["60_plus"].toFixed(2), unit: "60+", state: "Error" })
-          
             ]
           }),
 
