@@ -304,140 +304,6 @@
 
   <script>
     sap.ui.getCore().attachInit(function () {
-      // =====================
-// Popovers (AR / Risk / Contract)
-// =====================
-
-// Helper: nice currency
-const fmtUSD = (v) => `$${Number(v || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-// --- Risk Popover ---
-const riskPopover = new sap.m.Popover({
-  title: "Risk Details",
-  placement: "Auto",
-  contentWidth: "420px",
-  content: [
-    new sap.m.VBox({
-      width: "100%",
-      items: [
-        new sap.m.ObjectStatus({
-          text: model.account.riskLabel,
-          state: model.account.riskState,
-          icon: "sap-icon://shield"
-        }),
-        new sap.m.Text({ text: "Top drivers", class: "muted" }),
-        new sap.m.List({
-          items: model.account.riskDrivers.map(d =>
-            new sap.m.StandardListItem({
-              title: d.label,
-              icon: d.severity === "bad" ? "sap-icon://error" : "sap-icon://alert",
-              info: d.key,
-              infoState: d.severity === "bad" ? "Error" : "Warning"
-            })
-          )
-        }),
-        new sap.m.Text({ text: `Last updated: ${model.account.lastUpdated}`, class: "muted" })
-      ]
-    })
-  ],
-  footer: new sap.m.Toolbar({
-    content: [
-      new sap.m.Button({ text: "Create Action", type: "Emphasized", icon: "sap-icon://add-task" }),
-      new sap.m.ToolbarSpacer(),
-      new sap.m.Button({ text: "Close", press: () => riskPopover.close() })
-    ]
-  })
-});
-
-// --- AR Popover ---
-const arPopover = new sap.m.Popover({
-  title: "Billing & AR Breakdown",
-  placement: "Auto",
-  contentWidth: "420px",
-  content: [
-    new sap.m.VBox({
-      width: "100%",
-      items: [
-        new sap.m.ObjectNumber({
-          number: Number(model.ar.totalPastDue || 0).toFixed(2),
-          unit: "USD Past Due",
-          state: (model.ar.totalPastDue > 0) ? "Error" : "Success"
-        }),
-        new sap.m.Text({ text: `DSO: ${model.ar.dso} days`, class: "muted" }),
-
-        new sap.m.Title({ text: "Aging", level: "H6" }),
-        new sap.m.List({
-          items: [
-            new sap.m.DisplayListItem({ label: "0–30", value: fmtUSD(model.ar.aging["0_30"]) }),
-            new sap.m.DisplayListItem({ label: "31–60", value: fmtUSD(model.ar.aging["31_60"]) }),
-            new sap.m.DisplayListItem({ label: "60+", value: fmtUSD(model.ar.aging["60_plus"]) })
-          ]
-        }),
-
-        new sap.m.Title({ text: "Disputes", level: "H6" }),
-        new sap.m.ObjectStatus({
-          text: `${model.ar.disputes.count} open — ${fmtUSD(model.ar.disputes.amount)} (${model.ar.disputes.topReason})`,
-          state: model.ar.disputes.count > 0 ? "Warning" : "Success",
-          icon: "sap-icon://incident"
-        }),
-
-        new sap.m.MessageStrip({
-          text: "Recommended: Offer a payment plan + schedule a billing review call.",
-          type: "Information",
-          showIcon: true
-        })
-      ]
-    })
-  ],
-  footer: new sap.m.Toolbar({
-    content: [
-      new sap.m.Button({ text: "Payment Plan", type: "Emphasized", icon: "sap-icon://wallet" }),
-      new sap.m.Button({ text: "Create Task", icon: "sap-icon://add-task" }),
-      new sap.m.ToolbarSpacer(),
-      new sap.m.Button({ text: "Close", press: () => arPopover.close() })
-    ]
-  })
-});
-
-// --- Contract Terms Popover ---
-const contractPopover = new sap.m.Popover({
-  title: "Contract / Renewal Details",
-  placement: "Auto",
-  contentWidth: "420px",
-  content: [
-    new sap.m.VBox({
-      width: "100%",
-      items: [
-        new sap.m.ObjectStatus({
-          text: `Renewal in ${model.account.daysToRenewal} days`,
-          state: (model.account.daysToRenewal <= 90) ? "Warning" : "Success",
-          icon: "sap-icon://appointment-2"
-        }),
-        new sap.m.List({
-          items: [
-            new sap.m.DisplayListItem({ label: "Renewal Date", value: model.account.renewalDate }),
-            new sap.m.DisplayListItem({ label: "Annual Revenue", value: `$${model.account.annualRevenue.toLocaleString()}` }),
-            new sap.m.DisplayListItem({ label: "Revenue-at-Risk (90d)", value: `$${model.account.revenueAtRisk.toLocaleString()}` })
-          ]
-        }),
-        new sap.m.MessageStrip({
-          text: "Recommended: Book a QBR, confirm stakeholder coverage, and start pricing review 60–90 days out.",
-          type: "Warning",
-          showIcon: true
-        })
-      ]
-    })
-  ],
-  footer: new sap.m.Toolbar({
-    content: [
-      new sap.m.Button({ text: "Schedule QBR", type: "Emphasized", icon: "sap-icon://appointment-2" }),
-      new sap.m.Button({ text: "Create Opportunity", icon: "sap-icon://lead" }),
-      new sap.m.ToolbarSpacer(),
-      new sap.m.Button({ text: "Close", press: () => contractPopover.close() })
-    ]
-  })
-});
-//end new popover      
       const createCard = (title, content) => new sap.m.Panel({
         headerText: title,
         expandable: false,
@@ -511,7 +377,7 @@ const contractPopover = new sap.m.Popover({
       /**
        * 2) Customer Risk Level (upgraded: explainable)
        */
-     /* const riskLevel = new sap.m.VBox({
+      const riskLevel = new sap.m.VBox({
         items: [
           new sap.m.ObjectStatus({
             text: model.account.riskLabel,
@@ -522,35 +388,8 @@ const contractPopover = new sap.m.Popover({
           new sap.m.FormattedText({ htmlText: buildChipsHtml(model.account.riskDrivers) }),
           new sap.m.Text({ text: "Last updated: " + model.account.lastUpdated, class: "muted" })
         ]
-      }); */
+      });
 
-      //new riskview
-      const riskViewBtn = new sap.m.Button({
-  text: "View",
-  icon: "sap-icon://inspect",
-  press: (oEvent) => riskPopover.openBy(oEvent.getSource())
-});
-
-const riskLevel = new sap.m.VBox({
-  items: [
-    new sap.m.HBox({
-      justifyContent: "SpaceBetween",
-      items: [
-        new sap.m.ObjectStatus({
-          text: model.account.riskLabel,
-          state: model.account.riskState,
-          icon: "sap-icon://shield"
-        }),
-        riskViewBtn
-      ]
-    }),
-    new sap.m.Text({ text: "Top drivers:" }),
-    new sap.m.FormattedText({ htmlText: buildChipsHtml(model.account.riskDrivers) }),
-    new sap.m.Text({ text: "Last updated: " + model.account.lastUpdated, class: "muted" })
-  ]
-});
-
-      
       /**
        * NEW) Revenue-at-Risk Cockpit (60–90 days)
        */
@@ -577,12 +416,7 @@ const riskLevel = new sap.m.VBox({
 * 3) Billing & AR Snapshot (replaces Collections Status)
        */
       const arContent = new sap.m.VBox({
-        const arViewBtn = new sap.m.Button({
-        text: "View",
-        icon: "sap-icon://inspect",
-        press: (oEvent) => arPopover.openBy(oEvent.getSource())
-      }); //new button for popover
-      items: [
+        items: [
           new sap.m.ObjectNumber({
             number: model.ar.totalPastDue.toFixed(2),
             unit: "USD Past Due",
@@ -608,14 +442,12 @@ const riskLevel = new sap.m.VBox({
           }),
 
           new sap.m.Toolbar({
-          content: [
-            new sap.m.Button({ text: "Payment Plan", icon: "sap-icon://wallet" }),
-            arViewBtn,
-            new sap.m.ToolbarSpacer(),
-            new sap.m.Button({ text: "Open AR Items", icon: "sap-icon://money-bills" })
-          ]
-        })
-
+            content: [
+              new sap.m.Button({ text: "Payment Plan", icon: "sap-icon://wallet" }),
+              new sap.m.ToolbarSpacer(),
+              new sap.m.Button({ text: "Open AR Items", icon: "sap-icon://money-bills" })
+            ]
+          })
         ]
       });
 
@@ -674,13 +506,7 @@ const riskLevel = new sap.m.VBox({
       /**
        * 6) Contract Terms (slight add: renewal countdown)
        */
-      const contractViewBtn = new sap.m.Button({
-      text: "View",
-      icon: "sap-icon://inspect",
-      press: (oEvent) => contractPopover.openBy(oEvent.getSource())
-      });
-
-   /* const contractContent = new sap.m.VBox({
+      const contractContent = new sap.m.VBox({
         items: [
           new sap.m.ObjectStatus({
             text: `Exp. ${model.account.renewalDate} — Fixed Rate $0.14/kWh`,
@@ -697,35 +523,8 @@ const riskLevel = new sap.m.VBox({
           new sap.m.Text({ text: "Rate Description: Fixed Commercial 12-month" }),
           new sap.m.Label({ text: "Total Revenue To Date: $29,413.76" })
         ]
-      });*/
-    
-      //new contractcontent
-      const contractContent = new sap.m.VBox({
-  items: [
-    new sap.m.HBox({
-      justifyContent: "SpaceBetween",
-      items: [
-        new sap.m.ObjectStatus({
-          text: `Exp. ${model.account.renewalDate} — Fixed Rate $0.14/kWh`,
-          state: "None",
-          icon: "sap-icon://calendar"
-        }),
-        contractViewBtn
-      ]
-    }),
-    new sap.m.ObjectStatus({
-      text: `Renewal in ${model.account.daysToRenewal} days`,
-      state: (model.account.daysToRenewal <= 90) ? "Warning" : "Success",
-      icon: "sap-icon://appointment-2"
-    }),
-    new sap.m.Label({ text: "Start Date: 03/15/2024" }),
-    new sap.m.Label({ text: "Rate Plan ID: FXR14" }),
-    new sap.m.Text({ text: "Rate Description: Fixed Commercial 12-month" }),
-    new sap.m.Label({ text: "Total Revenue To Date: $29,413.76" })
-  ]
-});
+      });
 
-    
       /**
        * 7) Account Sentiment (unchanged)
        */
