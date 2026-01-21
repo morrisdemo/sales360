@@ -104,7 +104,6 @@
 
       /**
        * SAMPLE DATA MODEL
-       * Swap these with real OData/REST responses when you’re ready.
        */
       const model = {
         account: {
@@ -113,7 +112,7 @@
           renewalDate: "03/15/2026",
           daysToRenewal: 67,
           annualRevenue: 182500,
-          revenueAtRisk: 21400,        // next 90 days exposure
+          revenueAtRisk: 21400,
           revenueAtRiskTrend: "+$2.8k vs last 30 days",
           riskLabel: "Medium Risk",
           riskState: "Warning",
@@ -155,10 +154,9 @@
         `;
       };
 
-      // ===== Aging HTML (tiles + proportions) =====
+      // Aging HTML (tiles + proportions)
       const agingTotal =
         (model.ar.aging["0_30"] + model.ar.aging["31_60"] + model.ar.aging["60_plus"]) || 1;
-
       const pct = (v) => Math.round((v / agingTotal) * 100);
 
       const agingHtml = `
@@ -299,10 +297,29 @@
         })
       });
 
+      // ===== Renewal Checklist (NEW) =====
+      const renewalChecklistItems = [
+        { text: "Book QBR / renewal kickoff meeting", done: true },
+        { text: "Validate stakeholder map & buying roles", done: false },
+        { text: "Review billing/AR risks & dispute plan", done: false },
+        { text: "Confirm load forecast + demand/TOU opportunities", done: false },
+        { text: "Draft renewal proposal + pricing options", done: false },
+        { text: "Exec sponsor alignment / escalation path", done: false }
+      ];
+
+      const renewalChecklist = new sap.m.VBox({
+        items: renewalChecklistItems.map(i =>
+          new sap.m.CheckBox({
+            text: i.text,
+            selected: i.done
+          })
+        )
+      });
+
       const contractPopover = new sap.m.Popover({
         title: "Contract / Renewal Details",
         placement: "Auto",
-        contentWidth: "420px",
+        contentWidth: "460px",
         content: [
           new sap.m.VBox({
             width: "100%",
@@ -319,9 +336,13 @@
                   new sap.m.DisplayListItem({ label: "Revenue-at-Risk (90d)", value: `$${model.account.revenueAtRisk.toLocaleString()}` })
                 ]
               }),
+
+              new sap.m.Title({ text: "Renewal Checklist", level: "H6" }),
+              renewalChecklist,
+
               new sap.m.MessageStrip({
-                text: "Recommended: book a QBR, validate stakeholder map, and begin pricing review 60–90 days out.",
-                type: "Warning",
+                text: "Tip: Aim to complete checklist items 60–90 days before renewal.",
+                type: "Information",
                 showIcon: true
               })
             ]
