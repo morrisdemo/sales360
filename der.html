@@ -1,209 +1,10 @@
-<!-- Full HTML Below -->
-<!--<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Account Intelligence Overview</title>
-  <script
-    id="sap-ui-bootstrap"
-    src="https://sdk.openui5.org/resources/sap-ui-core.js"
-    data-sap-ui-theme="sap_horizon"
-    data-sap-ui-libs="sap.m"
-    data-sap-ui-async="true"
-    data-sap-ui-compatVersion="edge"
-  ></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    .cardGrid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      padding: 1rem;
-    }
-    .sapMPanel {
-      height: 100%;
-    }
-    #demandChart {
-      width: 100%;
-      height: 400px !important;
-      max-height: 400px;
-      margin: 1rem 0;
-    }
-  </style>
-</head>
-<body class="sapUiBody" id="content">
-  <div id="cardContainer" class="cardGrid"></div>
-  <canvas id="demandChart"></canvas>
-  <script>
-    sap.ui.getCore().attachInit(function () {
-      const createCard = (title, content) => new sap.m.Panel({
-        headerText: title,
-        expandable: false,
-        content: [content],
-        class: "sapUiResponsiveMargin"
-      });
-
-      const outageContent = new sap.m.ObjectStatus({
-        text: "Planned maintenance - 10/10/2025 8am–2pm",
-        state: "Warning",
-        icon: "sap-icon://alert"
-      });
-
-      const riskLevel = new sap.m.ObjectStatus({
-        text: "Medium Risk",
-        state: "Warning",
-        icon: "sap-icon://shield"
-      });
-
-      const collectionsContent = new sap.m.VBox({
-        items: [
-          new sap.m.ObjectNumber({ number: 238.50, unit: "USD", state: "Error" }),
-          new sap.m.Label({ text: "Controllable: Missed payments" }),
-          new sap.m.Text({ text: "Customer impacted by income disruption. Contact center note added 09/21." })
-        ]
-      });
-
-      const demandContent = new sap.m.VBox({
-        items: [
-          new sap.m.Label({ text: "Demand increased 12% YoY" }),
-          new sap.m.ObjectStatus({ text: "Projected increase: +8% in 2026", state: "Success", icon: "sap-icon://trend-up" })
-        ]
-      });
-
-      const contractContent = new sap.m.VBox({
-        items: [
-          new sap.m.ObjectStatus({
-            text: "Exp. 03/15/2026 — Fixed Rate $0.14/kWh",
-            state: "None",
-            icon: "sap-icon://calendar"
-          }),
-          new sap.m.Label({ text: "Start Date: 03/15/2024" }),
-          new sap.m.Label({ text: "Rate Plan ID: FXR14" }),
-          new sap.m.Text({ text: "Rate Description: Fixed Residential 12-month" }),
-          new sap.m.Label({ text: "Total Revenue To Date: $2,413.76" })
-        ]
-      });
-
-      const sentimentContent = new sap.m.VBox({
-        items: [
-          new sap.m.ObjectStatus({
-            text: "Neutral sentiment (last 90 days)",
-            state: "None",
-            icon: "sap-icon://employee-rejections"
-          }),
-          new sap.m.Label({ text: "Last Touchpoint: Support Call (Email)" }),
-          new sap.m.Label({ text: "Sentiment Trend: Improving" }),
-          new sap.m.Text({ text: "Lowest Score (12 mo): Very Unhappy | Highest: Very Happy" })
-        ]
-      });
-
-      const solarPrograms = new sap.m.VBox({
-        items: [
-          new sap.m.ObjectStatus({ text: "Rooftop Solar - Enrolled", state: "Success", icon: "sap-icon://energy-saving-lightbulb" }),
-          new sap.m.ObjectStatus({ text: "Community Solar - Not Enrolled", state: "None", icon: "sap-icon://cancel" })
-        ]
-      });
-
-      const evPrograms = new sap.m.VBox({
-        items: [
-          new sap.m.ObjectStatus({ text: "Hosted EV Charging - Enrolled", state: "Success", icon: "sap-icon://journey-arrival" }),
-          new sap.m.ObjectStatus({ text: "Residential EV Rate - Not Enrolled", state: "None", icon: "sap-icon://cancel" })
-        ]
-      });
-
-      const efficiencyPrograms = new sap.m.VBox({
-        items: [
-          new sap.m.ObjectStatus({ text: "Battery Storage - Enrolled", state: "Success", icon: "sap-icon://add-equipment" }),
-          new sap.m.ObjectStatus({ text: "TOU Rates - Enrolled", state: "Success", icon: "sap-icon://time-entry-request" }),
-          new sap.m.ObjectStatus({ text: "Building Efficiency - Not Enrolled", state: "None", icon: "sap-icon://cancel" })
-        ]
-      });
-
-      const cards = [
-        createCard("1. Recent / Planned Outages", outageContent),
-        createCard("2. Customer Risk Level", riskLevel),
-        createCard("3. Collections Status", collectionsContent),
-        createCard("4. Customer Demand YoY + Projection", demandContent),
-        createCard("5. Contract Terms", contractContent),
-        createCard("6. Account Sentiment", sentimentContent),
-        createCard("7. Rate / Generation Programs", solarPrograms),
-        createCard("8. Electric Vehicle Programs", evPrograms),
-        createCard("9. Energy Storage / Efficiency", efficiencyPrograms)
-      ];
-
-      cards.forEach(card => card.placeAt("cardContainer"));
-
-      const ctx = document.getElementById("demandChart").getContext("2d");
-      new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: ["2020", "2021", "2022", "2023", "2024", "2025", "2026*"],
-          datasets: [
-            {
-              label: "Peak Demand (kW)",
-              data: [420, 460, 510, 540, 580, 620, 670],
-              borderColor: "#0a6ed1",
-              backgroundColor: "rgba(10,110,209,0.1)",
-              fill: true,
-              tension: 0.3,
-              pointBackgroundColor: "#0a6ed1"
-            },
-            {
-              label: "TOU Peak Demand (kW)",
-              data: [220, 250, 270, 300, 330, 360, 390],
-              borderColor: "#f68c1f",
-              backgroundColor: "rgba(246,140,31,0.1)",
-              fill: true,
-              tension: 0.3,
-              pointBackgroundColor: "#f68c1f"
-            },
-            {
-              label: "TOU Off-Peak Demand (kW)",
-              data: [150, 170, 180, 200, 210, 230, 250],
-              borderColor: "#6a6d70",
-              backgroundColor: "rgba(106,109,112,0.1)",
-              fill: true,
-              tension: 0.3,
-              pointBackgroundColor: "#6a6d70"
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            title: {
-              display: true,
-              text: "Customer Demand (kW) — YoY with TOU Breakdown & 2026 Projection"
-            },
-            legend: {
-              position: "bottom"
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: false,
-              title: {
-                display: true,
-                text: "Demand (kW)"
-              }
-            }
-          }
-        }
-      });
-    });
-  </script>
-</body>
-</html>-->
-
-<!-- Full HTML Below -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Account Intelligence Overview</title>
+
   <script
     id="sap-ui-bootstrap"
     src="https://sdk.openui5.org/resources/sap-ui-core.js"
@@ -213,6 +14,7 @@
     data-sap-ui-compatVersion="edge"
   ></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     .cardGrid {
       display: grid;
@@ -220,9 +22,7 @@
       gap: 1rem;
       padding: 1rem;
     }
-    .sapMPanel {
-      height: 100%;
-    }
+    .sapMPanel { height: 100%; }
     #demandChart {
       width: 100%;
       height: 400px !important;
@@ -255,47 +55,37 @@
     .muted { color: #5f6b7a; }
 
     /* Aging bucket tiles */
-.agingGrid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.5rem;
-  margin-top: 0.25rem;
-}
-.agingTile {
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
-  padding: 0.6rem 0.65rem;
-  background: #fff;
-}
-.agingHdr {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 0.25rem;
-}
-.agingLabel {
-  font-size: 0.8rem;
-  color: #5f6b7a;
-}
-.agingValue {
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: #1d2d3e;
-}
-.agingBar {
-  height: 0.45rem;
-  border-radius: 999px;
-  background: #eef2f7;
-  overflow: hidden;
-}
-.agingFill {
-  height: 100%;
-  border-radius: 999px;
-}
-.agingFill--warn { background: #f59e0b; }
-.agingFill--bad  { background: #ef4444; }
-.agingFill--ok   { background: #22c55e; }
-</style>
+    .agingGrid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+    .agingTile {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      padding: 0.6rem 0.65rem;
+      background: #fff;
+    }
+    .agingHdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.25rem;
+    }
+    .agingLabel { font-size: 0.8rem; color: #5f6b7a; }
+    .agingValue { font-size: 1.05rem; font-weight: 600; color: #1d2d3e; }
+    .agingBar {
+      height: 0.45rem;
+      border-radius: 999px;
+      background: #eef2f7;
+      overflow: hidden;
+    }
+    .agingFill { height: 100%; border-radius: 999px; }
+    .agingFill--warn { background: #f59e0b; }
+    .agingFill--bad  { background: #ef4444; }
+    .agingFill--ok   { background: #22c55e; }
+  </style>
 </head>
 
 <body class="sapUiBody" id="content">
@@ -304,6 +94,7 @@
 
   <script>
     sap.ui.getCore().attachInit(function () {
+
       const createCard = (title, content) => new sap.m.Panel({
         headerText: title,
         expandable: false,
@@ -353,9 +144,8 @@
         }
       };
 
-      /**
-       * Reusable chip row (simple HTML inside a FormattedText)
-       */
+      // Helpers
+      const fmtUSD = (v) => `$${Number(v || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       const buildChipsHtml = (chips) => {
         const cls = (sev) => sev === "bad" ? "chip chip--bad" : sev === "good" ? "chip chip--good" : "chip chip--risk";
         return `
@@ -365,24 +155,219 @@
         `;
       };
 
-      /**
-       * 1) Recent / Planned Outages (unchanged)
-       */
+      // ===== Aging HTML (tiles + proportions) =====
+      const agingTotal =
+        (model.ar.aging["0_30"] + model.ar.aging["31_60"] + model.ar.aging["60_plus"]) || 1;
+
+      const pct = (v) => Math.round((v / agingTotal) * 100);
+
+      const agingHtml = `
+        <div class="agingGrid">
+          <div class="agingTile">
+            <div class="agingHdr">
+              <span class="agingLabel">0–30</span>
+              <span class="agingValue">${fmtUSD(model.ar.aging["0_30"])}</span>
+            </div>
+            <div class="agingBar">
+              <div class="agingFill agingFill--warn" style="width:${pct(model.ar.aging["0_30"])}%"></div>
+            </div>
+            <div class="muted" style="margin-top:0.25rem;font-size:0.75rem;">
+              ${pct(model.ar.aging["0_30"])}% of past due
+            </div>
+          </div>
+
+          <div class="agingTile">
+            <div class="agingHdr">
+              <span class="agingLabel">31–60</span>
+              <span class="agingValue">${fmtUSD(model.ar.aging["31_60"])}</span>
+            </div>
+            <div class="agingBar">
+              <div class="agingFill agingFill--bad" style="width:${pct(model.ar.aging["31_60"])}%"></div>
+            </div>
+            <div class="muted" style="margin-top:0.25rem;font-size:0.75rem;">
+              ${pct(model.ar.aging["31_60"])}% of past due
+            </div>
+          </div>
+
+          <div class="agingTile">
+            <div class="agingHdr">
+              <span class="agingLabel">60+</span>
+              <span class="agingValue">${fmtUSD(model.ar.aging["60_plus"])}</span>
+            </div>
+            <div class="agingBar">
+              <div class="agingFill agingFill--bad" style="width:${pct(model.ar.aging["60_plus"])}%"></div>
+            </div>
+            <div class="muted" style="margin-top:0.25rem;font-size:0.75rem;">
+              ${pct(model.ar.aging["60_plus"])}% of past due
+            </div>
+          </div>
+        </div>
+      `;
+
+      // =====================
+      // Popovers (Risk / AR / Contract)
+      // =====================
+
+      const riskPopover = new sap.m.Popover({
+        title: "Risk Details",
+        placement: "Auto",
+        contentWidth: "420px",
+        content: [
+          new sap.m.VBox({
+            width: "100%",
+            items: [
+              new sap.m.ObjectStatus({
+                text: model.account.riskLabel,
+                state: model.account.riskState,
+                icon: "sap-icon://shield"
+              }),
+              new sap.m.Text({ text: "Top drivers", class: "muted" }),
+              new sap.m.List({
+                items: model.account.riskDrivers.map(d =>
+                  new sap.m.StandardListItem({
+                    title: d.label,
+                    icon: d.severity === "bad" ? "sap-icon://error" : "sap-icon://alert",
+                    info: d.key,
+                    infoState: d.severity === "bad" ? "Error" : "Warning"
+                  })
+                )
+              }),
+              new sap.m.MessageStrip({
+                text: "Recommended: create a proactive action plan (AR follow-up + dispute resolution + SLA recovery).",
+                type: "Information",
+                showIcon: true
+              }),
+              new sap.m.Text({ text: `Last updated: ${model.account.lastUpdated}`, class: "muted" })
+            ]
+          })
+        ],
+        footer: new sap.m.Toolbar({
+          content: [
+            new sap.m.Button({ text: "Create Action", type: "Emphasized", icon: "sap-icon://add-task" }),
+            new sap.m.ToolbarSpacer(),
+            new sap.m.Button({ text: "Close", press: () => riskPopover.close() })
+          ]
+        })
+      });
+
+      const arPopover = new sap.m.Popover({
+        title: "Billing & AR Breakdown",
+        placement: "Auto",
+        contentWidth: "420px",
+        content: [
+          new sap.m.VBox({
+            width: "100%",
+            items: [
+              new sap.m.ObjectNumber({
+                number: Number(model.ar.totalPastDue || 0).toFixed(2),
+                unit: "USD Past Due",
+                state: (model.ar.totalPastDue > 0) ? "Error" : "Success"
+              }),
+              new sap.m.Text({ text: `DSO: ${model.ar.dso} days`, class: "muted" }),
+
+              new sap.m.Title({ text: "Aging", level: "H6" }),
+              new sap.m.List({
+                items: [
+                  new sap.m.DisplayListItem({ label: "0–30", value: fmtUSD(model.ar.aging["0_30"]) }),
+                  new sap.m.DisplayListItem({ label: "31–60", value: fmtUSD(model.ar.aging["31_60"]) }),
+                  new sap.m.DisplayListItem({ label: "60+", value: fmtUSD(model.ar.aging["60_plus"]) })
+                ]
+              }),
+
+              new sap.m.Title({ text: "Disputes", level: "H6" }),
+              new sap.m.ObjectStatus({
+                text: `${model.ar.disputes.count} open — ${fmtUSD(model.ar.disputes.amount)} (${model.ar.disputes.topReason})`,
+                state: model.ar.disputes.count > 0 ? "Warning" : "Success",
+                icon: "sap-icon://incident"
+              }),
+
+              new sap.m.MessageStrip({
+                text: "Recommended: offer a payment plan + schedule a billing review call.",
+                type: "Information",
+                showIcon: true
+              })
+            ]
+          })
+        ],
+        footer: new sap.m.Toolbar({
+          content: [
+            new sap.m.Button({ text: "Payment Plan", type: "Emphasized", icon: "sap-icon://wallet" }),
+            new sap.m.Button({ text: "Create Task", icon: "sap-icon://add-task" }),
+            new sap.m.ToolbarSpacer(),
+            new sap.m.Button({ text: "Close", press: () => arPopover.close() })
+          ]
+        })
+      });
+
+      const contractPopover = new sap.m.Popover({
+        title: "Contract / Renewal Details",
+        placement: "Auto",
+        contentWidth: "420px",
+        content: [
+          new sap.m.VBox({
+            width: "100%",
+            items: [
+              new sap.m.ObjectStatus({
+                text: `Renewal in ${model.account.daysToRenewal} days`,
+                state: (model.account.daysToRenewal <= 90) ? "Warning" : "Success",
+                icon: "sap-icon://appointment-2"
+              }),
+              new sap.m.List({
+                items: [
+                  new sap.m.DisplayListItem({ label: "Renewal Date", value: model.account.renewalDate }),
+                  new sap.m.DisplayListItem({ label: "Annual Revenue", value: `$${model.account.annualRevenue.toLocaleString()}` }),
+                  new sap.m.DisplayListItem({ label: "Revenue-at-Risk (90d)", value: `$${model.account.revenueAtRisk.toLocaleString()}` })
+                ]
+              }),
+              new sap.m.MessageStrip({
+                text: "Recommended: book a QBR, validate stakeholder map, and begin pricing review 60–90 days out.",
+                type: "Warning",
+                showIcon: true
+              })
+            ]
+          })
+        ],
+        footer: new sap.m.Toolbar({
+          content: [
+            new sap.m.Button({ text: "Schedule QBR", type: "Emphasized", icon: "sap-icon://appointment-2" }),
+            new sap.m.Button({ text: "Create Opportunity", icon: "sap-icon://lead" }),
+            new sap.m.ToolbarSpacer(),
+            new sap.m.Button({ text: "Close", press: () => contractPopover.close() })
+          ]
+        })
+      });
+
+      // =====================
+      // 1) Recent / Planned Outages
+      // =====================
       const outageContent = new sap.m.ObjectStatus({
         text: model.outage.text,
         state: model.outage.state,
         icon: "sap-icon://alert"
       });
 
-      /**
-       * 2) Customer Risk Level (upgraded: explainable)
-       */
+      // =====================
+      // 2) Risk card (with View button)
+      // =====================
+      const riskViewBtn = new sap.m.Button({
+        text: "View",
+        icon: "sap-icon://inspect",
+        type: "Transparent",
+        press: (oEvent) => riskPopover.openBy(oEvent.getSource())
+      });
+
       const riskLevel = new sap.m.VBox({
         items: [
-          new sap.m.ObjectStatus({
-            text: model.account.riskLabel,
-            state: model.account.riskState,
-            icon: "sap-icon://shield"
+          new sap.m.HBox({
+            justifyContent: "SpaceBetween",
+            items: [
+              new sap.m.ObjectStatus({
+                text: model.account.riskLabel,
+                state: model.account.riskState,
+                icon: "sap-icon://shield"
+              }),
+              riskViewBtn
+            ]
           }),
           new sap.m.Text({ text: "Top drivers:" }),
           new sap.m.FormattedText({ htmlText: buildChipsHtml(model.account.riskDrivers) }),
@@ -390,9 +375,9 @@
         ]
       });
 
-      /**
-       * NEW) Revenue-at-Risk Cockpit (60–90 days)
-       */
+      // =====================
+      // 3) Revenue-at-Risk
+      // =====================
       const revenueAtRiskContent = new sap.m.VBox({
         items: [
           new sap.m.ObjectNumber({
@@ -412,27 +397,34 @@
           })
         ]
       });
-/**
-* 3) Billing & AR Snapshot (replaces Collections Status)
-       */
+
+      // =====================
+      // 4) Billing & AR Snapshot (with View button + tile aging)
+      // =====================
+      const arViewBtn = new sap.m.Button({
+        text: "View",
+        icon: "sap-icon://inspect",
+        type: "Transparent",
+        press: (oEvent) => arPopover.openBy(oEvent.getSource())
+      });
+
       const arContent = new sap.m.VBox({
         items: [
-          new sap.m.ObjectNumber({
-            number: model.ar.totalPastDue.toFixed(2),
-            unit: "USD Past Due",
-            state: model.ar.totalPastDue > 0 ? "Error" : "Success"
+          new sap.m.HBox({
+            justifyContent: "SpaceBetween",
+            items: [
+              new sap.m.ObjectNumber({
+                number: model.ar.totalPastDue.toFixed(2),
+                unit: "USD Past Due",
+                state: model.ar.totalPastDue > 0 ? "Error" : "Success"
+              }),
+              arViewBtn
+            ]
           }),
           new sap.m.Text({ text: `DSO: ${model.ar.dso} days`, class: "muted" }),
 
           new sap.m.Title({ text: "Aging Buckets", level: "H6" }),
-          new sap.m.HBox({
-            justifyContent: "SpaceBetween",
-            items: [
-              new sap.m.ObjectNumber({ number: model.ar.aging["0_30"].toFixed(2), unit: "0–30", state: "Warning" }),
-              new sap.m.ObjectNumber({ number: model.ar.aging["31_60"].toFixed(2), unit: "31–60", state: "Error" }),
-              new sap.m.ObjectNumber({ number: model.ar.aging["60_plus"].toFixed(2), unit: "60+", state: "Error" })
-            ]
-          }),
+          new sap.m.FormattedText({ htmlText: agingHtml }),
 
           new sap.m.Title({ text: "Disputes", level: "H6" }),
           new sap.m.ObjectStatus({
@@ -451,9 +443,9 @@
         ]
       });
 
-      /**
-       * 4) Service / CX Operations (NEW)
-       */
+      // =====================
+      // 5) Service / CX Operations
+      // =====================
       const serviceOpsContent = new sap.m.VBox({
         items: [
           new sap.m.ObjectStatus({
@@ -492,9 +484,9 @@
         ]
       });
 
-      /**
-       * 5) Customer Demand YoY + Projection (unchanged card text, chart stays below)
-       */
+      // =====================
+      // 6) Demand card
+      // =====================
       const demandContent = new sap.m.VBox({
         items: [
           new sap.m.Label({ text: "Demand increased 12% YoY" }),
@@ -503,15 +495,28 @@
         ]
       });
 
-      /**
-       * 6) Contract Terms (slight add: renewal countdown)
-       */
+      // =====================
+      // 7) Contract card (with View button)
+      // =====================
+      const contractViewBtn = new sap.m.Button({
+        text: "View",
+        icon: "sap-icon://inspect",
+        type: "Transparent",
+        press: (oEvent) => contractPopover.openBy(oEvent.getSource())
+      });
+
       const contractContent = new sap.m.VBox({
         items: [
-          new sap.m.ObjectStatus({
-            text: `Exp. ${model.account.renewalDate} — Fixed Rate $0.14/kWh`,
-            state: "None",
-            icon: "sap-icon://calendar"
+          new sap.m.HBox({
+            justifyContent: "SpaceBetween",
+            items: [
+              new sap.m.ObjectStatus({
+                text: `Exp. ${model.account.renewalDate} — Fixed Rate $0.14/kWh`,
+                state: "None",
+                icon: "sap-icon://calendar"
+              }),
+              contractViewBtn
+            ]
           }),
           new sap.m.ObjectStatus({
             text: `Renewal in ${model.account.daysToRenewal} days`,
@@ -525,9 +530,9 @@
         ]
       });
 
-      /**
-       * 7) Account Sentiment (unchanged)
-       */
+      // =====================
+      // 8) Sentiment card
+      // =====================
       const sentimentContent = new sap.m.VBox({
         items: [
           new sap.m.ObjectStatus({
@@ -541,9 +546,9 @@
         ]
       });
 
-      /**
-       * 8-10) Program cards (unchanged)
-       */
+      // =====================
+      // 9-11) Program cards
+      // =====================
       const solarPrograms = new sap.m.VBox({
         items: [
           new sap.m.ObjectStatus({ text: "Rooftop Solar - Enrolled", state: "Success", icon: "sap-icon://energy-saving-lightbulb" }),
@@ -566,10 +571,9 @@
         ]
       });
 
-      /**
-       * Cards layout:
-       * - Adds 2 strong “control tower” cards while staying at 3x3 grid
-       */
+      // =====================
+      // Cards list
+      // =====================
       const cards = [
         createCard("1. Recent / Planned Outages", outageContent),
         createCard("2. Customer Risk Level (Explainable)", riskLevel),
@@ -587,13 +591,11 @@
         createCard("11. Energy Storage / Efficiency", efficiencyPrograms)
       ];
 
-      // If you want to keep exactly 9 cards, comment out the last two,
-      // or merge programs into 1 “Programs” card.
       cards.forEach(card => card.placeAt("cardContainer"));
 
-      /**
-       * Demand chart (unchanged)
-       */
+      // =====================
+      // Demand chart (unchanged)
+      // =====================
       const ctx = document.getElementById("demandChart").getContext("2d");
       new Chart(ctx, {
         type: "line",
@@ -637,17 +639,12 @@
               display: true,
               text: "Customer Demand (kW) — YoY with TOU Breakdown & 2026 Projection"
             },
-            legend: {
-              position: "bottom"
-            }
+            legend: { position: "bottom" }
           },
           scales: {
             y: {
               beginAtZero: false,
-              title: {
-                display: true,
-                text: "Demand (kW)"
-              }
+              title: { display: true, text: "Demand (kW)" }
             }
           }
         }
@@ -656,4 +653,5 @@
   </script>
 </body>
 </html>
+
 
