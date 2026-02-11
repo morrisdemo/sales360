@@ -16,11 +16,39 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    .cardGrid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      padding: 1rem;
+/* Make each grid row the same height (as tall as the tallest card in that row) */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+
+  /* Key: make implicit rows equal-height */
+  grid-auto-rows: 1fr;
+  align-items: stretch;
+}
+
+/* Make the UI5 Panel fill the grid cell */
+    .cardGrid > .sapMPanel {
+      height: 100%;
+    }
+    
+    /* Ensure panel content stretches vertically so toolbars stay pinned */
+    .cardGrid > .sapMPanel .sapMPanelContent {
+      height: calc(100% - 3rem); /* approx header height */
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Make the VBox inside each card take available vertical space */
+    .cardGrid > .sapMPanel .sapMVBox {
+      flex: 1 1 auto;
+    }
+    
+    /* Keep the last toolbar/button row at the bottom if present */
+    .cardGrid > .sapMPanel .sapMToolbar,
+    .cardGrid > .sapMPanel .sapMTB {
+      margin-top: auto;
     }
     .sapMPanel { height: 100%; }
     #demandChart {
